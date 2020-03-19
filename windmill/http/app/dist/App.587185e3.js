@@ -86807,11 +86807,11 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var axios_1 = __importDefault(require("axios"));
+var axios_1 = __importDefault(require("axios")); // const BaseURI = "http://localhost:8000";
 
-var BaseURI = "http://localhost:8000";
+
 var client = axios_1.default.create({
-  baseURL: BaseURI,
+  baseURL: "",
   data: JSON
 });
 
@@ -91913,22 +91913,15 @@ function (_super) {
 
         return _this.setState(func.apply(void 0, args));
       };
-    });
-
-    if (this.state.isLoading > 0 || false) {
-      return React.createElement("div", {
-        style: {
-          position: "absolute",
-          top: "45%",
-          left: "45%"
-        }
-      }, React.createElement(icon_1.StyledSpinner, {
-        style: {
-          width: "10vh",
-          height: "10vh"
-        }
-      }, React.createElement(icon_1.Icon, null)));
-    }
+    }); // if (this.state.isLoading > 0 || false) {
+    //   return (
+    //     <div style={{ position: "absolute", top: "45%", left: "45%" }}>
+    //       <StyledSpinner style={{ width: "10vh", height: "10vh" }}>
+    //         <Icon />
+    //       </StyledSpinner>
+    //     </div>
+    //   );
+    // }
 
     return React.createElement("div", null, this.state.isFileBrowserOpen ? React.createElement(components_1.FileBrowser, {
       getApp: function getApp() {
@@ -91983,7 +91976,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59639" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52253" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

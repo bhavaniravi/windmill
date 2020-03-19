@@ -258,15 +258,15 @@ export class App extends React.Component<{}, IAppState> {
       this.setState(func(...args))
     ) as typeof actions;
 
-    if (this.state.isLoading > 0 || false) {
-      return (
-        <div style={{ position: "absolute", top: "45%", left: "45%" }}>
-          <StyledSpinner style={{ width: "10vh", height: "10vh" }}>
-            <Icon />
-          </StyledSpinner>
-        </div>
-      );
-    }
+    // if (this.state.isLoading > 0 || false) {
+    //   return (
+    //     <div style={{ position: "absolute", top: "45%", left: "45%" }}>
+    //       <StyledSpinner style={{ width: "10vh", height: "10vh" }}>
+    //         <Icon />
+    //       </StyledSpinner>
+    //     </div>
+    //   );
+    // }
 
     return (
       <div>
