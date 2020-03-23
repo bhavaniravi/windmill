@@ -1,9 +1,9 @@
 import axios, { Method } from "axios";
 
-// const BaseURI = "http://localhost:8000";
+const BaseURI = "http://localhost:8000";
 
 const client = axios.create({
-  baseURL: "",
+  baseURL: BaseURI,
   data: JSON
 });
 
