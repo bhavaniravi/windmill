@@ -1,6 +1,7 @@
 from abc import ABC, abstractproperty
 from copy import deepcopy
 from typing import List
+import datetime
 
 import black
 from airflow.models.dag import DAG
@@ -45,6 +46,19 @@ class _ParamHandler(ABC):
                 raise DagHandlerValidationError(
                     f"'{param['id']}' is a required parameter'"
                 )
+
+        new_params = {}
+        for param in params:
+            if param.get("value") and param["value"] != param.get("default"):
+                if param.get("type") == "datetime.datetime":
+                    param["value"] = datetime.datetime.strptime(param["value"], "%Y-%m-%d %H:%M:%S")
+                # if param.get("type") == "datetime.timedelta":
+                #     param["value"] = datetime.timedelta(param["value"])
+                new_params[param["id"]] = param
+        
+        print (new_params)
+        return new_params
+
         return {
             param["id"]: param
             for param in params
@@ -73,6 +87,8 @@ class _ParamHandler(ABC):
         callables = ", ".join(
             [f"{k} = {self.param_to_callable(k)}" for k in self.callables]
         )
+
+        print ("Non==== ",non_callables, "\n\n Call", callables)
         if callables:
             return f"**{non_callables}, {callables}"
         return f"**{non_callables}"

@@ -1,4 +1,5 @@
 from airflow.models.dag import DAG
+import datetime
 {% for task in dag.tasks -%}
 from {{ task.module }} import {{ task.operator_type}}
 {% endfor %}
