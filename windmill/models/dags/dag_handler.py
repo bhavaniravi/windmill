@@ -55,15 +55,8 @@ class _ParamHandler(ABC):
                 # if param.get("type") == "datetime.timedelta":
                 #     param["value"] = datetime.timedelta(param["value"])
                 new_params[param["id"]] = param
-        
-        print (new_params)
-        return new_params
 
-        return {
-            param["id"]: param
-            for param in params
-            if param.get("value") and param["value"] != param.get("default")
-        }
+        return new_params
 
     def param_to_callable(self, param_name):
         return f"{self.snake_name}_{underscore(param_name)}_callable"
@@ -88,7 +81,6 @@ class _ParamHandler(ABC):
             [f"{k} = {self.param_to_callable(k)}" for k in self.callables]
         )
 
-        print ("Non==== ",non_callables, "\n\n Call", callables)
         if callables:
             return f"**{non_callables}, {callables}"
         return f"**{non_callables}"

@@ -1,9 +1,11 @@
 import inspect
 import logging
 import pkgutil
+import types
 from importlib import import_module
 
 from airflow import operators
+from airflow.contrib import operators as contrib_operators
 
 from .operator_handler import OperatorHandler
 from ...exceptions import OperatorMarshallError
@@ -46,6 +48,19 @@ class OperatorIndex:
         return self.get_default_operators()
 
     @staticmethod
+    def get_modules(path, route):
+        modules = []
+        for _, modname, _ in pkgutil.iter_modules(path):
+            try:
+                base_mod = import_module(f"{route}.{modname}")
+                modules.extend(list(base_mod.__dict__.values())) 
+            except (ModuleNotFoundError, SyntaxError) as e:
+                # NOTE Some of the HDFS libraries in Airflow don't support Python 3
+                logging.info(f"Unable to import operator from {modname}: {e}")
+        return modules
+
+
+    @staticmethod
     def get_default_operators():
         """Scrapes operators module for all classes that inherit from the BaseOperator
         class
@@ -54,19 +69,14 @@ class OperatorIndex:
             List[Operator]: List of Operator classes
         """
         ops = set()
-        for _, modname, _ in pkgutil.iter_modules(operators.__path__):
-            try:
-                mod = import_module(f"airflow.operators.{modname}")
-            except (ModuleNotFoundError, SyntaxError) as e:
-                # NOTE Some of the HDFS libraries in Airflow don't support Python 3
-                logging.info(f"Unable to import operator from {modname}: {e}")
-
-            ops = ops.union(
-                {
-                    v
-                    for v in mod.__dict__.values()
-                    if inspect.isclass(v) and issubclass(v, operators.BaseOperator)
-                }
-            )
+        modules = OperatorIndex.get_modules(operators.__path__, "airflow.operators") + \
+                  OperatorIndex.get_modules(contrib_operators.__path__, "airflow.contrib.operators")
+        ops = ops.union(
+            {
+                v
+                for v in modules
+                if inspect.isclass(v) and issubclass(v, operators.BaseOperator)
+            }
+        )
 
         return list(ops)
